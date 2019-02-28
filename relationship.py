@@ -23,14 +23,21 @@ def findFollowing(rows,start):
             *                          *
             ****************************
             '''.format(i))
+        real_id = rows[i][0]  # 取出来是元组
         for j in range(1,100):
-            real_id=rows[i][0] #取出来是元组
             url = "https://m.weibo.cn/api/container/getSecond?containerid=100505{}_-_FOLLOWERS&page=".format(real_id)+str(j)
             try:
                 crawlFollowing(url,real_id)
-            except:
+            except Exception as e:
                 print("搜索完毕")
+                print('Reason:', e)
+                t = random.random()*3+4
+                print("休眠时间为:{}s".format(t))
+                time.sleep(t)
                 break
+
+
+
 
 def crawlFollowing(url,originalId):
     req = requests.get(url)
@@ -53,10 +60,10 @@ def crawlFollowing(url,originalId):
             conn.close()
         else:
             print("非符合要求关注关系")
-    t=random.random()*3
+    t=random.random()*3+1
     print("休眠时间为:{}s".format(t))
     time.sleep(t)
 
 rows=readId()
-findFollowing(rows,1) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
+findFollowing(rows,2) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
 
