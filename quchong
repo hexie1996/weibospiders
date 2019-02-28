@@ -1,0 +1,4 @@
+delete from users where users.rowid not in 
+(
+    select max(users.rowid) from users group by id
+)
