@@ -31,7 +31,7 @@ def findFollowing(rows,start):
             except Exception as e:
                 print("搜索完毕")
                 print('Reason:', e)
-                t = random.random()*3+4
+                t = random.randint(5, 8)
                 print("休眠时间为:{}s".format(t))
                 time.sleep(t)
                 break
@@ -51,7 +51,7 @@ def crawlFollowing(url,originalId):
         verified_type=content['user']['verified_type']
         id=content['user']['id']
         if is_verified is True and verified_type is 2:
-            print("关系：%s->%s 已确定",format(originalId),format(id))
+            print("关系："+str(originalId)+"->"+str(id)+" 已确定")
             conn=sqlite3.connect('weibo.db')
             c=conn.cursor()
             c.execute("insert into relationship_table (follower_id,following_id) values(?,?)",(format(originalId),format(id)))
@@ -60,10 +60,10 @@ def crawlFollowing(url,originalId):
             conn.close()
         else:
             print("非符合要求关注关系")
-    t=random.random()*3+1
+    t = random.randint(5, 8) #3-5秒不行，会封号，亲测
     print("休眠时间为:{}s".format(t))
     time.sleep(t)
 
 rows=readId()
-findFollowing(rows,2) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
+findFollowing(rows,13) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
 
