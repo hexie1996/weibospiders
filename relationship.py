@@ -23,6 +23,10 @@ def findFollowing(rows,start):
             *                          *
             ****************************
             '''.format(i))
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("还有"+str(1800-i)+"个账号的信息没有爬取，预计还需要"+str(43*6*(1800-i))+"秒跑完，合约"+str(43*6*(1800-i)/3600)+"小时")
+        print("合计不吃不喝跑"+str(43*6*(1800-i)/(3600*24))+"天，加油啊小电脑！！！！！！！！")
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         real_id = rows[i][0]  # 取出来是元组
         for j in range(1,100):
             url = "https://m.weibo.cn/api/container/getSecond?containerid=100505{}_-_FOLLOWERS&page=".format(real_id)+str(j)
@@ -31,7 +35,7 @@ def findFollowing(rows,start):
             except Exception as e:
                 print("搜索完毕")
                 print('Reason:', e)
-                t = random.randint(5, 8)
+                t = random.randint(4, 6)
                 print("休眠时间为:{}s".format(t))
                 time.sleep(t)
                 break
@@ -60,10 +64,10 @@ def crawlFollowing(url,originalId):
             conn.close()
         else:
             print("非符合要求关注关系")
-    t = random.randint(5, 8) #3-5秒不行，会封号，亲测
+    t = random.randint(5,7) #3-5秒不行，会封号，亲测
     print("休眠时间为:{}s".format(t))
     time.sleep(t)
 
 rows=readId()
-findFollowing(rows,13) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
+findFollowing(rows,1467) #手动断点，将上次跑过得行数放到这里，预计整个工程需要的时间为32w秒 orz
 
