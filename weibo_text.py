@@ -21,6 +21,13 @@ def readId():
 
 def findText(rows,start):
     for i in range (start,1800): #应该从0开始
+        print('''
+                    ****************************
+                    *                          * 
+                    * 当前在获取第{}个账号的信息  *
+                    *                          *
+                    ****************************
+                    '''.format(i))
         now_id=rows[i][0]
         url="https://m.weibo.cn/api/container/getIndex?type=uid&value="+str(now_id)+"&containerid=107603"+str(now_id)+"&page=1"
         crawl_text(url,now_id)
@@ -44,7 +51,7 @@ def tackle_text(real_content):
     time = real_content['created_at']
     if '昨天' in time:
         created_date = yesterday
-    if '分钟前' in time or '小时前' in time:
+    elif '分钟前' in time or '小时前' in time:
         created_date = today
     else:
         created_date = time
@@ -75,7 +82,7 @@ def tackle_text(real_content):
         is_pics = 0
         # at信息
     is_at = find_at(text,weibo_id,user_id)
-    is_topic = 0
+    is_topic = find_topic(text,weibo_id,user_id)
     is_video = 0
     try:
         next_info = real_content['page_info']
@@ -183,5 +190,20 @@ def find_at(text,weibo_id,user_id):
 
     return is_at
 
+def find_topic(text,weibo_id,user_id):
+    topics=re.findall(r"#(.+?)#",text)
+    if len(topics):
+        is_topic=1
+        for topic in topics:
+            conn = sqlite3.connect('weibo.db')
+            conn.execute("insert into topics (weibo_id,user_id,topic_content) values (?,?,?)",
+                         (format(weibo_id), format(user_id), format(topic)))
+            conn.commit()
+            conn.close()
+    else:
+        is_topic=0
+    return is_topic
+
 rows=readId()
-findText(rows,0)
+findText(rows,1605)
+
