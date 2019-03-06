@@ -3,7 +3,7 @@ import re
 from jieba import analyse
 
 textrank = analyse.textrank
-analyse.set_stop_words("stopwords.txt")
+analyse.set_stop_words("stopwords")
 
 def fetch_text():
     conn=sqlite3.connect('weibo.db')
