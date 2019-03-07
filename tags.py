@@ -1,8 +1,9 @@
 import sqlite3
 import re
+import jieba
 from jieba import analyse
 
-textrank = analyse.textrank
+tfidf = analyse.extract_tags
 analyse.set_stop_words("stopwords")
 
 def fetch_users():
@@ -16,14 +17,14 @@ def fetch_users():
 def extract_raw_text(raw_text):
     for text in raw_text:
         user_id=text[0]
-        real_text=text[5]
+        real_text=text[10]
         real_text = re.sub(r'@(.+?)：', '', real_text)
         real_text = re.sub(r'@(.+?):', '', real_text)
         real_text = re.sub(r'@(.+?) ', '', real_text)
         real_text = re.sub(r'@(.+?) ', '', real_text)
         real_text = re.sub(r'#(.+?)#', '', real_text)
         print(str(real_text))
-        keywords=textrank(real_text,allowPOS=('n','nr','ns'))
+        keywords=tfidf(real_text)
         for keyword in keywords:
             conn = sqlite3.connect('weibo.db')
             conn.execute("insert into tags (user_id,tag) values (?,?)",
